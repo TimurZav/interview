@@ -49,9 +49,9 @@ def remove_file_by_date(days):
         creation_day_file: datetime = datetime.fromtimestamp(os.stat(file).st_ctime)
         if datetime.now() - creation_day_file > timedelta(days=days):
             os.remove(file)
-            yield f"file {os.path.basename(file)} are deleted because N days have passed"
+            yield f"file {os.path.basename(file)} are deleted because {days} days have passed"
         else:
-            yield f"file {os.path.basename(file)} have been left because N days have not passed"
+            yield f"file {os.path.basename(file)} have been left because {days} days have not passed"
 
 
 #  Задание 5
