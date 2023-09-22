@@ -56,13 +56,11 @@ def remove_file_by_date(days):
 
 #  Задание 5
 class ConcatenationWords:
-    def __init__(self):
-        self.input_word: str = input("Введите любое слово из файла task5.txt: <<< ")
 
     @staticmethod
-    def read_file(file_name):
+    def read_file(file_name: str) -> List[str]:
         """
-
+        Read file from directory.
         :return:
         """
         with open(file_name, "r") as file:
@@ -81,6 +79,28 @@ class ConcatenationWords:
             sorted_dict[key] = value
         return "".join(sorted_dict.values())
 
+    @staticmethod
+    def find_same_letters_right_order(input_word: str, word: str, dict_index_letters: dict) -> None:
+        """
+        We find the same letters from right to left.
+        :param input_word: Input word.
+        :param word: Current word in list.
+        :param dict_index_letters:
+        :return:
+        """
+        word_copy: str = word
+        reverse_input_word: str = input_word[::-1]
+        for i, letter in enumerate(reverse_input_word, start=1):
+            indexes: list = [n for n, x in enumerate(word) if x == letter]
+            letter_same: str = reverse_input_word[i] if len(reverse_input_word) > i else None
+            for index in indexes:
+                if not dict_index_letters and word[index - 1] == letter_same:
+                    word_copy = word_copy[:index] + word_copy[index + 1:]
+                    dict_index_letters[index] = letter
+                elif index + 1 in dict_index_letters and 0 not in dict_index_letters:
+                    word_copy = word_copy[:index] + word_copy[index + 1:]
+                    dict_index_letters[index] = letter
+
     def concatenate_words(self, words: List[str]) -> list:
         """
         Read file and concatenate the words by the same letters in the right order.
@@ -88,39 +108,17 @@ class ConcatenationWords:
         :return:
         """
         concat_words: list = []
+        input_word: str = input("Введите любое слово из файла task5.txt: \n<<< ")
         for word in words:
-            if word == self.input_word:
+            if word == input_word:
                 continue
             dict_index_letters: dict = {}
-            self.find_same_letters_right_order(word, dict_index_letters)
+            self.find_same_letters_right_order(input_word, word, dict_index_letters)
             str_same_letters: str = self.sort_dict_by_keys(dict_index_letters)
-            if len(dict_index_letters) > 1 and self.input_word.endswith(str_same_letters) \
+            if len(dict_index_letters) > 1 and input_word.endswith(str_same_letters) \
                     and word.startswith(str_same_letters):
-                concat_words.append(self.input_word.replace(str_same_letters, '') + word)
+                concat_words.append(input_word.replace(str_same_letters, '') + word)
         return concat_words
-
-    def find_same_letters_right_order(self, word: str, dict_index_letters: dict) -> None:
-        """
-        We find the same letters from right to left.
-        :param word: Current word in list.
-        :param dict_index_letters:
-        :return:
-        """
-        word_copy: str = word
-        reverse_input_word: str = self.input_word[::-1]
-        for i, letter in enumerate(reverse_input_word):
-            indexes: list = [n for n, x in enumerate(word) if x == letter]
-            for index in indexes:
-                try:
-                    letter_same: str = reverse_input_word[i + 1]
-                except IndexError:
-                    continue
-                if not dict_index_letters and word[index - 1] == letter_same:
-                    word_copy = word_copy[:index] + word_copy[index + 1:]
-                    dict_index_letters[index] = letter
-                elif index + 1 in dict_index_letters and 0 not in dict_index_letters:
-                    word_copy = word_copy[:index] + word_copy[index + 1:]
-                    dict_index_letters[index] = letter
 
 
 if __name__ == "__main__":
