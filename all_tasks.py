@@ -57,41 +57,70 @@ def remove_file_by_date(days):
 #  Задание 5
 class ConcatenationWords:
     def __init__(self):
-        self.input_word: str = input("Введите любое слово из файла task5.txt: ")
+        self.input_word: str = input("Введите любое слово из файла task5.txt: <<< ")
 
-    def concatenate_words(self) -> list:
+    @staticmethod
+    def read_file(file_name):
         """
-        Read file and concatenate the words by the same letters in the right order.
+
         :return:
         """
-        with open("task5.txt", "r") as file:
-            words: List[str] = file.read().splitlines()
+        with open(file_name, "r") as file:
+            return file.read().splitlines()
+
+    @staticmethod
+    def sort_dict_by_keys(dict_index_letters: dict) -> str:
+        """
+        Sort dictionary by keys.
+        :param dict_index_letters: Dictionary with
+        :return:
+        """
+        sorted_list: list = sorted(dict_index_letters.items())
+        sorted_dict: dict = {}
+        for key, value in sorted_list:
+            sorted_dict[key] = value
+        return "".join(sorted_dict.values())
+
+    def concatenate_words(self, words: List[str]) -> list:
+        """
+        Read file and concatenate the words by the same letters in the right order.
+        :param words:
+        :return:
+        """
         concat_words: list = []
         for word in words:
             if word == self.input_word:
                 continue
-            list_letters: list = []
-            self.find_same_letters_right_order(word, list_letters)
-            if len(list_letters) > 1:
-                is_suit = [letter == self.input_word[-i] for i, letter in enumerate(reversed(list_letters), 1)]
-                concat_words.append(self.input_word.replace(''.join(list_letters), '') + word) if all(is_suit) else None
+            dict_index_letters: dict = {}
+            self.find_same_letters_right_order(word, dict_index_letters)
+            str_same_letters: str = self.sort_dict_by_keys(dict_index_letters)
+            if len(dict_index_letters) > 1 and self.input_word.endswith(str_same_letters) \
+                    and word.startswith(str_same_letters):
+                concat_words.append(self.input_word.replace(str_same_letters, '') + word)
         return concat_words
 
-    def find_same_letters_right_order(self, word: str, list_letters: list) -> None:
+    def find_same_letters_right_order(self, word: str, dict_index_letters: dict) -> None:
         """
         We find the same letters from right to left.
         :param word: Current word in list.
-        :param list_letters: A list with matching letters.
+        :param dict_index_letters:
         :return:
         """
-        for letter in self.input_word[::-1]:
-            if letter in word:
-                indexes: list = [n for n, x in enumerate(word) if x == letter]
-                for index in indexes:
-                    if not list_letters:
-                        list_letters.insert(0, letter)
-                    elif index + 1 in [n for n, x in enumerate(word) if x == list_letters[0]]:
-                        list_letters.insert(0, letter)
+        word_copy: str = word
+        reverse_input_word: str = self.input_word[::-1]
+        for i, letter in enumerate(reverse_input_word):
+            indexes: list = [n for n, x in enumerate(word) if x == letter]
+            for index in indexes:
+                try:
+                    letter_same: str = reverse_input_word[i + 1]
+                except IndexError:
+                    continue
+                if not dict_index_letters and word[index - 1] == letter_same:
+                    word_copy = word_copy[:index] + word_copy[index + 1:]
+                    dict_index_letters[index] = letter
+                elif index + 1 in dict_index_letters and 0 not in dict_index_letters:
+                    word_copy = word_copy[:index] + word_copy[index + 1:]
+                    dict_index_letters[index] = letter
 
 
 if __name__ == "__main__":
@@ -104,4 +133,6 @@ if __name__ == "__main__":
     print("\nЗадание 4")
     pprint.pprint(list(remove_file_by_date(1)))  # Задание 4
     print("\nЗадание 5")
-    print(ConcatenationWords().concatenate_words())  # Задание 5
+    concatenation_words: ConcatenationWords = ConcatenationWords()
+    list_words: List[str] = concatenation_words.read_file("task5.txt")
+    print(concatenation_words.concatenate_words(list_words))  # Задание 5
