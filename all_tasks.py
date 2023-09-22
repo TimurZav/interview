@@ -80,15 +80,15 @@ class ConcatenationWords:
         return "".join(sorted_dict.values())
 
     @staticmethod
-    def find_same_letters_right_order(input_word: str, word: str, dict_index_letters: dict) -> None:
+    def find_same_letters_and_indexes(input_word: str, word: str) -> Dict[int, str]:
         """
         We find the same letters from right to left.
         :param input_word: Input word.
         :param word: Current word in list.
-        :param dict_index_letters:
-        :return:
+        :return: Index of letter.
         """
         word_copy: str = word
+        dict_index_letters: Dict[int, str] = {}
         reverse_input_word: str = input_word[::-1]
         for i, letter in enumerate(reverse_input_word, start=1):
             indexes: list = [n for n, x in enumerate(word) if x == letter]
@@ -100,6 +100,7 @@ class ConcatenationWords:
                 elif index + 1 in dict_index_letters:
                     word_copy = word_copy[:index] + word_copy[index + 1:]
                     dict_index_letters[index] = letter
+        return dict_index_letters
 
     def concatenate_words(self, words: List[str]) -> list:
         """
@@ -112,8 +113,7 @@ class ConcatenationWords:
         for word in words:
             if word == input_word:
                 continue
-            dict_index_letters: dict = {}
-            self.find_same_letters_right_order(input_word, word, dict_index_letters)
+            dict_index_letters: Dict[int, str] = self.find_same_letters_and_indexes(input_word, word)
             str_same_letters: str = self.sort_dict_by_keys(dict_index_letters)
             if len(dict_index_letters) > 1 and input_word.endswith(str_same_letters) \
                     and word.startswith(str_same_letters):
