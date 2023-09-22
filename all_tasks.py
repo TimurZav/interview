@@ -92,9 +92,9 @@ class ConcatenationWords:
         reverse_input_word: str = input_word[::-1]
         for i, letter in enumerate(reverse_input_word, start=1):
             indexes: list = [n for n, x in enumerate(word) if x == letter]
-            letter_same: str = reverse_input_word[i] if len(reverse_input_word) > i else None
+            letter_next: str = reverse_input_word[i] if len(reverse_input_word) > i else None
             for index in indexes:
-                if not dict_index_letters and word[index - 1] == letter_same:
+                if not dict_index_letters and word[index - 1] == letter_next:
                     word_copy = word_copy[:index] + word_copy[index + 1:]
                     dict_index_letters[index] = letter
                 elif index + 1 in dict_index_letters and 0 not in dict_index_letters:
