@@ -97,7 +97,7 @@ class ConcatenationWords:
                 if not dict_index_letters and word[index - 1] == letter_next:
                     word_copy = word_copy[:index] + word_copy[index + 1:]
                     dict_index_letters[index] = letter
-                elif index + 1 in dict_index_letters and 0 not in dict_index_letters:
+                elif index + 1 in dict_index_letters:
                     word_copy = word_copy[:index] + word_copy[index + 1:]
                     dict_index_letters[index] = letter
 
