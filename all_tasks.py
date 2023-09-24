@@ -126,6 +126,15 @@ class ConcatenationWords:
 class ConcatenationWordsTwo:
 
     @staticmethod
+    def read_file(file_name: str) -> List[str]:
+        """
+        Read file from directory.
+        :return:
+        """
+        with open(file_name, "r") as file:
+            return file.read().splitlines()
+
+    @staticmethod
     def convert_words_to_dicts(words: List[str]) -> dict:
         """
 
@@ -268,14 +277,14 @@ if __name__ == "__main__":
     pprint.pprint(get_list_dict_digits([[1, 2, 3], [4, 5, 6], [7, 8, 9]]))  # Задание 3
     print("\nЗадание 4")
     pprint.pprint(list(remove_file_by_date(1)))  # Задание 4
-    print("\nЗадание 5")
-    concatenation_words: ConcatenationWords = ConcatenationWords()
-    list_words: List[str] = concatenation_words.read_file("task5.txt")
-
+    # print("\nЗадание 5")
+    # concatenation_words: ConcatenationWords = ConcatenationWords()
+    # list_words: List[str] = concatenation_words.read_file("task5.txt")
     # print(concatenation_words.concatenate_words(list_words))  # Задание 5
 
     print("\nЗадание 5. Другое решение")
     concatenation_words_two: ConcatenationWordsTwo = ConcatenationWordsTwo()
+    list_words: List[str] = concatenation_words_two.read_file("task5.txt")
     dict_nested_letters_ = concatenation_words_two.convert_words_to_dicts(list_words)
 
     for _ in range(3):
