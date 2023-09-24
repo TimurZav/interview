@@ -221,14 +221,17 @@ class ConcatenationWordsTwo:
         :return:
         """
         current_dict: dict = dict_nested_letters
-        same_letters: list = []
+        same_letters: List[str] = []
         for letter in input_word:
             if letter in current_dict:
                 current_dict = current_dict[letter]
                 same_letters.append(letter)
             else:
                 current_dict = dict_nested_letters
-                same_letters = [letter] if letter in dict_nested_letters else []
+                same_letters = []
+                if letter in dict_nested_letters:
+                    current_dict = current_dict[letter]
+                    same_letters.append(letter)
         return current_dict, same_letters
 
     def main(self, input_word: str, results: list, dict_nested_letters: dict):
@@ -246,7 +249,9 @@ class ConcatenationWordsTwo:
         list_same_letters: list = self.get_list_letters_from_dict(current_dict)
         for letters in list_same_letters:
             new_word: str = input_word + "".join(letters)
-            result_dict: List[List[str]] = self.get_list_letters_from_dict(self.merge_list_to_dict(same_letters, current_dict))
+            result_dict: List[List[str]] = self.get_list_letters_from_dict(
+                self.merge_list_to_dict(same_letters, current_dict)
+            )
             for list_letters in result_dict:
                 self.remove_keys_in_order(dict_nested_letters, list_letters)
             self.main(input_word, results, dict_nested_letters)
