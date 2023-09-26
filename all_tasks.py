@@ -186,9 +186,12 @@ class ConcatenationWordsTwo:
     def merge_list_and_dict(same_letters: list, current_dict: dict) -> dict:
         """
         Combines the list and dictionary into a single dictionary.
+        For example,
+            ['с', 'т', 'ы'] AND {'к': {'о': {'в': {'к': {'а': {}}}}}}
+            -> {'с': {'т': {'ы': {'к': {'о': {'в': {'к': {'а': {}}}}}}}}}.
         :param same_letters: Same letters.
         :param current_dict: A dictionary where the keys are letters.
-        :return: Combines the dictionary.
+        :return: Combines the dictionary. For example, {'с': {'т': {'ы': {'к': {'о': {'в': {'к': {'а': {}}}}}}}}}.
         """
         for letter in same_letters:
             if letter not in current_dict:
@@ -196,12 +199,9 @@ class ConcatenationWordsTwo:
             current_dict = current_dict[letter]
         return current_dict
 
-    def merge_list_to_dict(self, same_letters: list, dict_nested_letters: dict) -> dict:
+    def get_dict_with_letters(self, same_letters: list, dict_nested_letters: dict) -> dict:
         """
-        Combines the list and dictionary into a single dictionary.
-        For example,
-            ['с', 'т', 'ы'] AND {'к': {'о': {'в': {'к': {'а': {}}}}}}
-            -> {'с': {'т': {'ы': {'к': {'о': {'в': {'к': {'а': {}}}}}}}}}.
+        Getting a dictionary with letters to delete it.
         :param same_letters: Same letters.
         :param dict_nested_letters: A dictionary where the keys are letters.
         :return: Combines the dictionary. For example, {'с': {'т': {'ы': {'к': {'о': {'в': {'к': {'а': {}}}}}}}}}.
@@ -274,7 +274,7 @@ class ConcatenationWordsTwo:
         for letters in list_same_letters:
             new_word: str = input_word + "".join(letters)
             result_dict: List[List[str]] = self.get_list_letters_from_dict(
-                self.merge_list_to_dict(same_letters, current_dict)
+                self.get_dict_with_letters(same_letters, current_dict)
             )
             for list_letters in result_dict:
                 self.remove_keys_in_order(dict_nested_letters, list_letters)
