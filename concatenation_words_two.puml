@@ -1,0 +1,32 @@
+@startuml
+
+class ConcatenationWordsTwo {
+
+  + read_file()
+  + convert_words_to_dicts()
+  + main()
+  + find_same_letters()
+  + get_list_letters_from_dict()
+  + get_dict_with_letters()
+  + merge_list_and_dict()
+  + get_list_letters_from_dict()
+  + merge_list_and_dict()
+  + get_list_letters_from_dict()
+  + remove_keys_in_order()
+  + main() # recursion
+}
+
+ConcatenationWordsTwo --> read_file : <<call 1>>
+read_file --> convert_words_to_dicts : <<call 2>>
+convert_words_to_dicts --> main : <<call 3>>
+main --> find_same_letters : <<call 4>>
+find_same_letters --> get_list_letters_from_dict : <<call 5>>
+get_list_letters_from_dict --> get_dict_with_letters : <<call 6>>
+get_dict_with_letters --> merge_list_and_dict : <<call 7>>
+merge_list_and_dict --> get_list_letters_from_dict : <<call 8>>
+get_list_letters_from_dict --> merge_list_and_dict : <<call 9>>
+merge_list_and_dict --> get_list_letters_from_dict : <<call 10>>
+get_list_letters_from_dict --> remove_keys_in_order : <<call 11>>
+remove_keys_in_order --> main : <<call 12>>
+
+@enduml
