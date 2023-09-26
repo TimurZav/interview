@@ -129,7 +129,8 @@ class ConcatenationWordsTwo:
     def read_file(file_name: str) -> List[str]:
         """
         Read file from directory.
-        :return:
+        :param file_name: Name of file with words.
+        :return: List of words.
         """
         with open(file_name, "r") as file:
             return file.read().splitlines()
@@ -137,9 +138,14 @@ class ConcatenationWordsTwo:
     @staticmethod
     def convert_words_to_dicts(words: List[str]) -> dict:
         """
-
-        :param words:
-        :return:
+        Converting words in the dictionary from letters. For example,
+            Content of file
+            кабала
+            карась
+            ->
+            'к': {'а': {'б': {'а': {'л': {'а': {}}}}, '': {}, 'р': {'а': {'с': {'ь': {}}}}}}
+        :param words: Words from file.
+        :return: A dictionary where the keys are letters.
         """
         dict_nested_letters: dict = {}
         for word in words:
@@ -156,78 +162,86 @@ class ConcatenationWordsTwo:
         return dict_nested_letters
 
     @staticmethod
-    def get_list_letters_from_dict(nested_dict: dict) -> List[List[str]]:
+    def get_list_letters_from_dict(dict_nested_letters: dict) -> List[List[str]]:
         """
-
-        :param nested_dict:
-        :return:
+        We get a list of letters from the dictionary. For example,
+            {'к': {'': {}, 'о': {'в': {'к': {'а': {}}}}}} -> [['к'], ['к', 'о', 'в', 'к', 'а']].
+        :param dict_nested_letters: A dictionary where the keys are letters.
+        :return: А list with letters for later connection and deletion.
         """
         all_letters: List[List[str]] = []
         letters: List[str] = []
-        while nested_dict:
-            letter: str = next(iter(nested_dict.keys()))
+        while dict_nested_letters:
+            letter: str = next(iter(dict_nested_letters.keys()))
             if letter:
                 letters.append(letter)
-                nested_dict = nested_dict[letter]
+                dict_nested_letters = dict_nested_letters[letter]
             else:
-                nested_dict.pop(letter)
+                dict_nested_letters.pop(letter)
                 all_letters.append(letters.copy())
         all_letters.append(letters)
         return all_letters
 
     @staticmethod
-    def merge_two_dicts(letters: list, current_dict: dict) -> dict:
+    def merge_two_dicts(same_letters: list, current_dict: dict) -> dict:
         """
-
-        :param letters:
-        :param current_dict:
-        :return:
+        Combines the list and dictionary into a single dictionary.
+        :param same_letters: Same letters.
+        :param current_dict: A dictionary where the keys are letters.
+        :return: Combines the dictionary.
         """
-        for letter in letters:
+        for letter in same_letters:
             if letter not in current_dict:
                 current_dict[letter] = {}
             current_dict = current_dict[letter]
         return current_dict
 
-    def merge_list_to_dict(self, letters: list, nested_dict: dict) -> dict:
+    def merge_list_to_dict(self, same_letters: list, dict_nested_letters: dict) -> dict:
         """
-
-        :param letters:
-        :param nested_dict:
-        :return:
+        Combines the list and dictionary into a single dictionary.
+        For example,
+            ['с', 'т', 'ы'] AND {'к': {'о': {'в': {'к': {'а': {}}}}}}
+            -> {'с': {'т': {'ы': {'к': {'о': {'в': {'к': {'а': {}}}}}}}}}.
+        :param same_letters: Same letters.
+        :param dict_nested_letters: A dictionary where the keys are letters.
+        :return: Combines the dictionary. For example, {'с': {'т': {'ы': {'к': {'о': {'в': {'к': {'а': {}}}}}}}}}.
         """
         result_dict: dict = {}
         current_dict: dict = result_dict
 
-        current_dict = self.merge_two_dicts(letters, current_dict)
-        for letters in self.get_list_letters_from_dict(nested_dict):
-            current_dict = self.merge_two_dicts(letters, current_dict)
+        current_dict = self.merge_two_dicts(same_letters, current_dict)
+        for same_letters in self.get_list_letters_from_dict(dict_nested_letters):
+            current_dict = self.merge_two_dicts(same_letters, current_dict)
 
         return result_dict
 
-    def remove_keys_in_order(self, dict_nested_letters: dict, keys: list) -> dict:
+    def remove_keys_in_order(self, dict_nested_letters: dict, same_letters: list) -> dict:
         """
-
-        :param dict_nested_letters:
-        :param keys:
-        :return:
+        This method is needed to remove the appropriate keys (letters) for later adding them to the results list.
+        :param dict_nested_letters: A dictionary where the keys are letters.
+        :param same_letters: Same letters.
+        :return: Dictionary with deleted letters, since this word was included in the results list.
         """
-        if not keys:
+        if not same_letters:
             return dict_nested_letters
-        key: str = keys.pop(0)
+        key: str = same_letters.pop(0)
         if key in dict_nested_letters:
-            dict_nested_letters[key] = self.remove_keys_in_order(dict_nested_letters[key], keys)
+            dict_nested_letters[key] = self.remove_keys_in_order(dict_nested_letters[key], same_letters)
             if not dict_nested_letters[key]:
                 del dict_nested_letters[key]
         return dict_nested_letters
     
     @staticmethod
-    def find_same_letters(input_word: str, dict_nested_letters: dict) -> Tuple[dict, list]:
+    def find_same_letters(input_word: str, dict_nested_letters: dict) -> Tuple[list, dict]:
         """
-
-        :param input_word:
-        :param dict_nested_letters:
-        :return:
+        This method finds the same letters from the entered word in the dictionary with letters.
+        For example, лаСТЫ -> {'к': {'': {}, 'о': {'в': {'к': {'а': {}}}}}}, where same letters is ['с', 'т', 'ы'].
+        :param input_word: The word entered by the user.
+        :param dict_nested_letters: A dictionary where the keys are letters.
+        :return: Same letters in list and remains letters in dict.
+        For example,
+            ['с', 'т', 'ы'] AND {'к': {'': {}, 'о': {'в': {'к': {'а': {}}}}}},
+            that formed words ['стык', 'стыковка'].
         """
         current_dict: dict = dict_nested_letters
         same_letters: List[str] = []
@@ -241,18 +255,19 @@ class ConcatenationWordsTwo:
                 if letter in dict_nested_letters:
                     current_dict = current_dict[letter]
                     same_letters.append(letter)
-        return current_dict, same_letters
+        return same_letters, current_dict
 
-    def main(self, input_word: str, results: list, dict_nested_letters: dict):
+    def main(self, input_word: str, results: list, dict_nested_letters: dict) -> None:
         """
-
-        :param input_word:
-        :param results:
-        :param dict_nested_letters:
+        The main method that runs the code.
+        :param input_word: The word entered by the user.
+        :param results: Suitable words are added here. For example, ласты -> ['ластык', 'ластыковка'].
+        :param dict_nested_letters: A dictionary where the keys are letters.
+        For example, {'л': {'а': {'с': {'т': {'ы': {}}}}}}.
         :return:
         """
         dict_nested_letters: dict = copy.deepcopy(dict_nested_letters)
-        current_dict, same_letters = self.find_same_letters(input_word, dict_nested_letters)
+        same_letters, current_dict = self.find_same_letters(input_word, dict_nested_letters)
         if len(same_letters) <= 1:
             return None
         list_same_letters: list = self.get_list_letters_from_dict(current_dict)
