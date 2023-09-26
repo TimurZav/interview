@@ -183,7 +183,7 @@ class ConcatenationWordsTwo:
         return all_letters
 
     @staticmethod
-    def merge_two_dicts(same_letters: list, current_dict: dict) -> dict:
+    def merge_list_and_dict(same_letters: list, current_dict: dict) -> dict:
         """
         Combines the list and dictionary into a single dictionary.
         :param same_letters: Same letters.
@@ -209,9 +209,9 @@ class ConcatenationWordsTwo:
         result_dict: dict = {}
         current_dict: dict = result_dict
 
-        current_dict = self.merge_two_dicts(same_letters, current_dict)
+        current_dict = self.merge_list_and_dict(same_letters, current_dict)
         for same_letters in self.get_list_letters_from_dict(dict_nested_letters):
-            current_dict = self.merge_two_dicts(same_letters, current_dict)
+            current_dict = self.merge_list_and_dict(same_letters, current_dict)
 
         return result_dict
 
