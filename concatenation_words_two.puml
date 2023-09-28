@@ -4,14 +4,10 @@ class ConcatenationWordsTwo {
 
   + read_file()
   + convert_words_to_dicts()
-  + main()
   + find_same_letters()
   + get_list_letters_from_dict()
   + get_dict_with_letters()
   + merge_list_and_dict()
-  + get_list_letters_from_dict()
-  + merge_list_and_dict()
-  + get_list_letters_from_dict()
   + remove_keys_in_order()
   + main() # recursion
 }
